@@ -1,0 +1,1 @@
+export type Task={id:string;title:string;description?:string;status:'PENDING'|'IN_PROGRESS'|'DONE';priority:'LOW'|'MEDIUM'|'HIGH';dueDate?:string;location?:string;attachments:{id:string;url:string;fileName?:string}[];weather?:{temp:number;description:string;icon:string;cityName:string}};
