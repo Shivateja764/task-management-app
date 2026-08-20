@@ -16,6 +16,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://127.0.0.1:3000',
       'http://192.168.254.35:3000',
+      'https://task-management-app-one-bay.vercel.app',
     ],
     credentials: true,
   });
@@ -34,7 +35,7 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  console.log(`Backend running on http://localhost:${port}`);
+  console.log(`Backend running on port ${port}`);
 }
 
 bootstrap();
