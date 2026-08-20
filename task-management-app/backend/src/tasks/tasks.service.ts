@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { EmailService } from '../email/email.service';
 import { WeatherService } from '../weather/weather.service';
-import { CloudinaryService } from '../storage/cloudinary.service';
 
 import {
   CreateTaskDto,
@@ -14,10 +13,9 @@ import {
 @Injectable()
 export class TasksService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly email: EmailService,
-    private readonly weather: WeatherService,
-    private readonly cloud: CloudinaryService,
+    private prisma: PrismaService,
+    private email: EmailService,
+    private weather: WeatherService,
   ) {}
 
   private readonly include = {
@@ -149,22 +147,6 @@ export class TasksService {
       include: this.include,
     });
 
-    if (files.length > 0) {
-      const uploaded = await Promise.all(
-        files.map((file) => this.cloud.upload(file)),
-      );
-
-      await this.prisma.attachment.createMany({
-        data: uploaded.map((upload: any, index: number) => ({
-          taskId: task.id,
-          url: upload.secure_url,
-          publicId: upload.public_id,
-          fileName: files[index].originalname,
-          mimeType: files[index].mimetype,
-        })),
-      });
-    }
-
     await this.email
       .sendTaskCreated(email, task.title)
       .catch(() => undefined);
@@ -211,22 +193,6 @@ export class TasksService {
         }),
       },
     });
-
-    if (files.length > 0) {
-      const uploaded = await Promise.all(
-        files.map((file) => this.cloud.upload(file)),
-      );
-
-      await this.prisma.attachment.createMany({
-        data: uploaded.map((upload: any, index: number) => ({
-          taskId: id,
-          url: upload.secure_url,
-          publicId: upload.public_id,
-          fileName: files[index].originalname,
-          mimeType: files[index].mimetype,
-        })),
-      });
-    }
 
     if (
       oldTask.status !== TaskStatus.DONE &&
