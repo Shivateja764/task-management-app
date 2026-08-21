@@ -9,18 +9,21 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
 
+  // Global API prefix
   app.setGlobalPrefix('api');
 
+  // CORS configuration
   app.enableCors({
     origin: [
       'http://localhost:3000',
       'http://127.0.0.1:3000',
       'http://192.168.254.35:3000',
-      'https://task-management-app-one-bay.vercel.app',
+      'https://task-management-app-nu-steel.vercel.app',
     ],
     credentials: true,
   });
 
+  // Validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -29,8 +32,10 @@ async function bootstrap() {
     }),
   );
 
+  // Global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
 
+  // Port
   const port = Number(config.get('PORT', 5000));
 
   await app.listen(port);
